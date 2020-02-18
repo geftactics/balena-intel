@@ -31,8 +31,7 @@ fi
 #   resin_rootB -> uuid_rootb
 #   resin_state -> uuid_state
 #   resin_data -> uuid_data
-search --set=boot --label resin-boot
-source (${boot})/os_fs_uuids.txt
+source (${root})/os_fs_uuids.txt
 if [ x${uuid_boot} != x ]; then
  # If one is available we assume all the rest are as well.
  grub_cmdline="${grub_cmdline} uuid_boot=${uuid_boot}"
@@ -40,34 +39,38 @@ if [ x${uuid_boot} != x ]; then
  grub_cmdline="${grub_cmdline} uuid_rootb=${uuid_rootb}"
  grub_cmdline="${grub_cmdline} uuid_state=${uuid_state}"
  grub_cmdline="${grub_cmdline} uuid_data=${uuid_data}"
+else
+  uuid_boot=%%RESIN_BOOT_UUID%%
+  uuid_roota=%%RESIN_ROOTA_UUID%%
+  uuid_rootb=%%RESIN_ROOTB_UUID%%
 fi
 
 menuentry 'boot'{
 if [ ${bootcount} = 2 ] ; then
  if [ ${resin_root_part} = 2 ] ; then
-  search --set=root --label resin-rootB
-  linux /boot/bzImage root=LABEL=resin-rootB @@KERNEL_CMDLINE@@ ${grub_cmdline}
+  search --set=root --fs-uuid ${uuid_rootb}
+  linux /boot/bzImage root=UUID=${uuid_rootb} @@KERNEL_CMDLINE@@ ${grub_cmdline}
  else
-  search --set=root --label resin-rootA
-  linux /boot/bzImage root=LABEL=resin-rootA @@KERNEL_CMDLINE@@ ${grub_cmdline}
+  search --set=root --fs-uuid ${uuid_roota}
+  linux /boot/bzImage root=UUID=${uuid_roota} @@KERNEL_CMDLINE@@ ${grub_cmdline}
  fi
 else
  if [ ${resin_root_part} = 2 ] ; then
-  search --set=root --label resin-rootA
-  linux /boot/bzImage root=LABEL=resin-rootA @@KERNEL_CMDLINE@@ ${grub_cmdline}
+  search --set=root --fs-uuid ${uuid_roota}
+  linux /boot/bzImage root=UUID=${uuid_roota} @@KERNEL_CMDLINE@@ ${grub_cmdline}
  else
-  search --set=root --label resin-rootB
-  linux /boot/bzImage root=LABEL=resin-rootB @@KERNEL_CMDLINE@@ ${grub_cmdline}
+  search --set=root --fs-uuid ${uuid_rootb}
+  linux /boot/bzImage root=UUID=${uuid_rootb} @@KERNEL_CMDLINE@@ ${grub_cmdline}
  fi
 fi
 }
 
 menuentry 'manualfallbackA' {
-search --set=root --label resin-rootA
-linux /boot/bzImage root=LABEL=resin-rootA @@KERNEL_CMDLINE@@ ${grub_cmdline}
+  search --set=root --fs-uuid ${uuid_roota}
+  linux /boot/bzImage root=UUID=${uuid_roota} @@KERNEL_CMDLINE@@ ${grub_cmdline}
 }
 
 menuentry 'manualfallbackB' {
-search --set=root --label resin-rootB
-linux /boot/bzImage root=LABEL=resin-rootB @@KERNEL_CMDLINE@@ ${grub_cmdline}
+  search --set=root --fs-uuid ${uuid_rootb}
+  linux /boot/bzImage root=UUID=${uuid_rootb} @@KERNEL_CMDLINE@@ ${grub_cmdline}
 }

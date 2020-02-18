@@ -52,6 +52,14 @@ else
     rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/grub"
 fi
 
+echo "[resin-init-flasher-board] Fixing filesystem UUIDs for first boot."
+RESIN_BOOT_UUID=$(lsblk -n -o UUID /dev/disk/by-label/resin-boot)
+RESIN_ROOTA_UUID=$(lsblk -n -o UUID /dev/disk/by-label/resin-rootA)
+RESIN_ROOTB_UUID=$(lsblk -n -o UUID /dev/disk/by-label/resin-rootB)
+find ${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT} -name "grub.cfg" -exec sed -i "s/%%RESIN_BOOT_UUID%%/${RESIN_BOOT_UUID}/g" '{}' \+
+find ${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT} -name "grub.cfg" -exec sed -i "s/%%RESIN_ROOTA_UUID%%/${RESIN_ROOTA_UUID}/g" '{}' \+
+find ${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT} -name "grub.cfg" -exec sed -i "s/%%RESIN_ROOTB_UUID%%/${RESIN_ROOTB_UUID}/g" '{}' \+
+
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 sync
 
