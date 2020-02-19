@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.47.0+rev4
+## (2020-02-19)
+
+* Boot using filesystem UUIDs instead of labels [Alex Gonzalez]
+
 # v2.47.0+rev3
 ## (2020-02-10)
 

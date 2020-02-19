@@ -1,4 +1,29 @@
 - commits:
+    - subject: Boot using filesystem UUIDs instead of labels
+      hash: b7138dc4bf93575aad445a5eb22f12a74609bd57
+      body: >
+        The filesystem UUIDs are inserted by the resin-image-flasher image in
+        the
+
+        flashing process, or are read from a os_fs_uuids.txt file on the
+        partition
+
+        grub boots from.
+
+
+        Note that this change make resin-image non-bootable if not installed
+        into
+
+        the device via the resin-image-flasher image.
+      footer:
+        Changelog-entry: Boot using filesystem UUIDs instead of labels
+        changelog-entry: Boot using filesystem UUIDs instead of labels
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.47.0+rev4
+  date: 2020-02-19T17:07:34.988Z
+- commits:
     - subject: Update meta-rust to include 1.36
       hash: 5dbc1f4201d3930db300f9754db801b7009ad31f
       body: ''
